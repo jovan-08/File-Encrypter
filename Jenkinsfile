@@ -12,16 +12,25 @@ node('agent') {
             echo "==============================================="
         }
 
+        stage('Checkout Source Code') {
+            echo "Cloning repository from GitHub..."
+            checkout scm
+
+            sh '''
+            echo "Repository successfully cloned."
+            echo "Listing workspace contents:"
+            ls -la
+            '''
+        }
+
         stage('Build') {
             sh '''
             echo "-----------------------------------------------"
             echo "[BUILD STAGE]"
             echo "Compiling Java source files..."
-            echo "Current workspace contents:"
-            ls -la
 
             echo "Navigating to project directory..."
-            cd "Password Protection"
+            cd "Password Protection" || { echo "Project directory not found!"; exit 1; }
 
             echo "Creating build directory..."
             mkdir -p build
